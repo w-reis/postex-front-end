@@ -7,11 +7,11 @@
 <path fill-rule="evenodd" clip-rule="evenodd" d="M74.2264 49.4309L96.4905 28.1411L97.4378 54.4136L83.0693 68.1534V88.8334L85.4843 86.5245C90.1267 82.085 98.0642 85.2292 98.0642 91.5069C98.0642 93.3757 97.2879 95.1686 95.9059 96.4898L74.2264 117.344V75.9943V49.4309Z" fill="#0748B4"/>
 </g>
 <defs>
-<linearGradient id="paint0_linear" x1="142.914" y1="16.2047" x2="142.914" y2="237.214" gradientUnits="userSpaceOnUse">
-<stop stop-color="#0748B4"/>
+<linearGradient id="paint0_linear" x1="323.5" y1="74.5" x2="35.5" y2="338" gradientUnits="userSpaceOnUse">
+<stop offset="0.172026" stop-color="#0748B4"/>
 <stop offset="1" stop-color="#56CCF2"/>
 </linearGradient>
-<linearGradient id="paint1_linear" x1="126.757" y1="5.2083e-06" x2="126.757" y2="237.482" gradientUnits="userSpaceOnUse">
+<linearGradient id="paint1_linear" x1="318.5" y1="60.5" x2="126.757" y2="237.482" gradientUnits="userSpaceOnUse">
 <stop stop-color="#56CCF2"/>
 <stop offset="1" stop-color="#0748B4"/>
 </linearGradient>

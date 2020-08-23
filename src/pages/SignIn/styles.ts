@@ -65,17 +65,6 @@ export const Background = styled.div`
     display: none;
   }
 
-  input {
-    border-radius: 8px;
-    border: 1px solid #717171;
-    padding: 16px;
-    width: 100%;
-
-    & + input {
-      margin-top: 8px;
-    }
-  }
-
   button {
     background: #0748b4;
     height: 56px;
