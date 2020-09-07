@@ -6,7 +6,7 @@ import GlobalStyle from './styles/global';
 
 import ToastContainer from './components/ToastContainer';
 
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './hooks/auth';
 
 const App: React.FC = () => (
   <>
