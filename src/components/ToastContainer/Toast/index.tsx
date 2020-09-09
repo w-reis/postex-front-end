@@ -24,6 +24,16 @@ const icons = {
 const Toast: React.FC<ToastProps> = ({ message }) => {
   const { removeToast } = useToast();
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      removeToast(message.id);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [message.id, removeToast]);
+
   return (
     <Container type={message.type} hasDescription={!!message.description}>
       {icons[message.type || 'info']}
