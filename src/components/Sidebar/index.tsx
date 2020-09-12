@@ -4,13 +4,18 @@ import { Link } from 'react-router-dom';
 import { MdStorage, MdMailOutline, MdPeople } from 'react-icons/md';
 import { useAuth } from '../../hooks/auth';
 
+import BlueLogoImg from '../../assets/logo-title-blue.svg';
+
 import { Container } from './styles';
 
 const Sidebar: React.FC = () => {
   const { user } = useAuth();
   return (
     <Container>
-      <div className="sidebar-header">{user.username.toUpperCase()}</div>
+      <div className="sidebar-header">
+        <img src={BlueLogoImg} alt="postex" />
+        {user.username.toUpperCase()}
+      </div>
       <ul>
         <li>
           <Link to="/">
