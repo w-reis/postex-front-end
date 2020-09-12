@@ -7,10 +7,11 @@ export default createGlobalStyle`
     box-sizing: border-box;
     outline: 0;
   }
-  body {
+  html, #root, body {
     background: '#F1F1F1';
     color: '#4A4B4E';
     -webkit-font-smoothing: antialiased;
+    height: 100%;
   }
 
   body, input, button {
