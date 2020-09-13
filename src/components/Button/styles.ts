@@ -9,5 +9,4 @@ export const Container = styled.button`
   color: #ffffff;
   width: 100%;
   font-weight: 992;
-  margin-top: 16px;
 `;
