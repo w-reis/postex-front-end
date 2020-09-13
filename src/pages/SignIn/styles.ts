@@ -65,6 +65,10 @@ export const Background = styled.div`
     display: none;
   }
 
+  button {
+    margin-top: 16px;
+  }
+
   @media (min-width: 768px) {
     form {
       width: 500px;
