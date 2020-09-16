@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { FormHandles } from '@unform/core';
@@ -9,26 +9,41 @@ import { GoSearch } from 'react-icons/go';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
+import api from '../../services/api';
+import { useAuth } from '../../hooks/auth';
+
 import { Container } from './styles';
 
+interface CorrespondenceData {
+  id: number;
+  recipient_name: string;
+  object_number: string;
+  status: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
 const Correspondences: React.FC = () => {
+  const [correspondences, setCorrespondences] = useState<CorrespondenceData[]>(
+    [],
+  );
+
   const history = useHistory();
   const formRef = useRef<FormHandles>(null);
-  const cartas = [
-    {
-      id: 1,
-      name: 'Wellinton Fabricio dos Reis',
-      number: '549843839274',
-      status: 'pendente',
-    },
+  const { token } = useAuth();
 
-    {
-      id: 2,
-      name: 'Alvaro Valdivino dos Reis',
-      number: '549843839274',
-      status: 'pendente',
-    },
-  ];
+  const loadCorrespondences = useCallback(async () => {
+    const response = await api.get('correspondences', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    setCorrespondences(response.data);
+  }, [token]);
+
+  useEffect(() => {
+    loadCorrespondences();
+  }, []);
 
   return (
     <Container>
@@ -57,17 +72,17 @@ const Correspondences: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {cartas.map((carta) => (
-            <tr key={carta.id}>
+          {correspondences.map((correspondence) => (
+            <tr key={correspondence.id}>
               <td>
                 <label htmlFor="check">
                   <input type="checkbox" id="check" />
                 </label>
               </td>
-              <td>{carta.id}</td>
-              <td>{carta.name}</td>
-              <td>{carta.number}</td>
-              <td>{carta.status}</td>
+              <td>{correspondence.id}</td>
+              <td>{correspondence.recipient_name}</td>
+              <td>{correspondence.object_number}</td>
+              <td>{correspondence.status}</td>
               <td>editar | excluir | entregar</td>
             </tr>
           ))}
