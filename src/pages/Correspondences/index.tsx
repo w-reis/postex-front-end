@@ -1,15 +1,19 @@
 import React, { useRef } from 'react';
-import { GoSearch } from 'react-icons/go';
+import { useHistory } from 'react-router-dom';
 
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 
-import { Container } from './styles';
+import { GoSearch } from 'react-icons/go';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
+import { Container } from './styles';
+
 const Correspondences: React.FC = () => {
+  const history = useHistory();
+  const formRef = useRef<FormHandles>(null);
   const cartas = [
     {
       id: 1,
@@ -25,7 +29,7 @@ const Correspondences: React.FC = () => {
       status: 'pendente',
     },
   ];
-  const formRef = useRef<FormHandles>(null);
+
   return (
     <Container>
       <div>
@@ -33,7 +37,12 @@ const Correspondences: React.FC = () => {
           <Input name="query" icon={GoSearch} placeholder="Buscar" autoFocus />
         </Form>
 
-        <Button type="button">Novo</Button>
+        <Button
+          type="button"
+          onClick={() => history.push('/correspondences/create')}
+        >
+          Novo
+        </Button>
       </div>
 
       <table>
