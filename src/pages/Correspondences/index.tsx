@@ -5,9 +5,11 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 
 import { GoSearch } from 'react-icons/go';
+import { MdEdit, MdDelete } from 'react-icons/md';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import SmallButton from '../../components/SmallButton';
 
 import api from '../../services/api';
 import { useAuth } from '../../hooks/auth';
@@ -83,7 +85,24 @@ const Correspondences: React.FC = () => {
               <td>{correspondence.recipient_name}</td>
               <td>{correspondence.object_number}</td>
               <td>{correspondence.status}</td>
-              <td>editar | excluir | entregar</td>
+              <td>
+                <SmallButton
+                  backgroundColorCode="#4FA845"
+                  path="/correspondences"
+                >
+                  Entregar
+                </SmallButton>
+                <SmallButton
+                  icon={MdEdit}
+                  backgroundColorCode="#0269D9"
+                  path="/correspondences"
+                />
+                <SmallButton
+                  icon={MdDelete}
+                  backgroundColorCode="#C93934"
+                  path="/correspondences"
+                />
+              </td>
             </tr>
           ))}
         </tbody>
