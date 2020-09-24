@@ -23,6 +23,12 @@ const Routes: React.FC = () => {
         component={CorrespondenceForm}
         isPrivate
       />
+
+      <Route
+        path="/correspondences/edit"
+        component={CorrespondenceForm}
+        isPrivate
+      />
     </Switch>
   );
 };
