@@ -6,25 +6,25 @@ interface ContainerProps {
   hasText: boolean;
 }
 
-export const Container = styled.div<ContainerProps>`
+export const Container = styled.button<ContainerProps>`
   display: inline-flex;
   vertical-align: middle;
   line-height: 16px;
 
-  a {
-    padding: 4px;
-    border-radius: 4px;
-    display: flex;
-    text-decoration: none;
-    color: #ffffff;
-    transition: all 0.5s ease;
-    margin-right: 8px;
+  padding: 4px;
+  border-radius: 4px;
+  border: 0;
+  font-size: 12px;
+  text-decoration: none;
+  color: #ffffff;
+  transition: all 0.5s ease;
+  margin-right: 8px;
 
-    span {
-      font-weight: 600;
-      transform: translateY(-1px);
-    }
+  span {
+    font-weight: 600;
+    transform: translateY(-1px);
   }
+
   ${($props) =>
     $props.hasText &&
     css`
@@ -37,10 +37,9 @@ export const Container = styled.div<ContainerProps>`
   ${(props) =>
     props.backgroundColor &&
     css`
-      a {
-        background: ${props.backgroundColor};
-      }
-      a:hover {
+      background: ${props.backgroundColor};
+
+      &:hover {
         box-shadow: inset 0 0 0 999px rgba(0, 0, 0, 0.3);
       }
     `}
