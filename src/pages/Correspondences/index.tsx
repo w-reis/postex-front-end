@@ -13,6 +13,7 @@ import SmallButton from '../../components/SmallButton';
 
 import api from '../../services/api';
 import { useAuth } from '../../hooks/auth';
+import { useToast } from '../../hooks/toast';
 
 import { Container } from './styles';
 
@@ -32,20 +33,40 @@ const Correspondences: React.FC = () => {
 
   const history = useHistory();
   const formRef = useRef<FormHandles>(null);
-  const { token } = useAuth();
+  const { token, signOut } = useAuth();
+  const { addToast } = useToast();
 
   const loadCorrespondences = useCallback(async () => {
-    const response = await api.get('correspondences', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    setCorrespondences(response.data);
-  }, [token]);
+    try {
+      const response = await api.get('correspondences', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setCorrespondences(response.data);
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Sua sessão expirou!',
+        description: 'Faça login novamente para utilizar o Postex.',
+      });
+      signOut();
+    }
+  }, [token, addToast, signOut]);
+
+  const goToEdit = useCallback(
+    (id: number) => {
+      history.push({
+        pathname: '/correspondences/edit',
+        state: { id: id.toString() },
+      });
+    },
+    [history],
+  );
 
   useEffect(() => {
     loadCorrespondences();
-  }, []);
+  }, [loadCorrespondences]);
 
   return (
     <Container>
@@ -87,21 +108,14 @@ const Correspondences: React.FC = () => {
               <td>{correspondence.status}</td>
               <td>
                 <SmallButton
-                  backgroundColorCode="#4FA845"
-                  path="/correspondences"
-                >
-                  Entregar
-                </SmallButton>
-                <SmallButton
                   icon={MdEdit}
                   backgroundColorCode="#0269D9"
-                  path="/correspondences"
+                  onClick={() => goToEdit(correspondence.id)}
                 />
-                <SmallButton
-                  icon={MdDelete}
-                  backgroundColorCode="#C93934"
-                  path="/correspondences"
-                />
+                <SmallButton icon={MdDelete} backgroundColorCode="#C93934" />
+                <SmallButton backgroundColorCode="#4FA845">
+                  Entregar
+                </SmallButton>
               </td>
             </tr>
           ))}
