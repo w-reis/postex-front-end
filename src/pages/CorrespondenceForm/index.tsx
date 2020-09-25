@@ -187,6 +187,9 @@ const CorrespondenceForm: React.FC = () => {
         <Row>
           <Label>Id do destinatário</Label>
           <div>
+            <Button type="button">
+              <GoSearch size="24" />
+            </Button>
             <Input
               name="recipient_id"
               type="number"
@@ -194,9 +197,6 @@ const CorrespondenceForm: React.FC = () => {
               onKeyDown={PreventDotEandSignsOnInput}
               defaultValue={correspondence.recipient_id}
             />
-            <Button type="button">
-              <GoSearch size="24" />
-            </Button>
           </div>
         </Row>
         <Row>

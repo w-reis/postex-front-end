@@ -83,7 +83,7 @@ export const Row = styled.div`
     margin-top: 8px;
     transition: all 0.5s ease;
     width: 56px;
-    margin-left: 8px;
+    margin-right: 8px;
   }
 
   button:hover {
