@@ -64,6 +64,27 @@ const Correspondences: React.FC = () => {
     [history],
   );
 
+  const deleteCorrespondence = useCallback(
+    async (id: number) => {
+      try {
+        await api.delete(`/correspondences/${id.toString()}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        loadCorrespondences();
+      } catch (error) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao deletar;',
+          description: 'Ocorreu um erro ao deletar a correspondência.',
+        });
+      }
+    },
+    [addToast, loadCorrespondences, token],
+  );
+
   useEffect(() => {
     loadCorrespondences();
   }, [loadCorrespondences]);
@@ -95,30 +116,42 @@ const Correspondences: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {correspondences.map((correspondence) => (
-            <tr key={correspondence.id}>
-              <td>
-                <label htmlFor="check">
-                  <input type="checkbox" id="check" />
-                </label>
-              </td>
-              <td>{correspondence.id}</td>
-              <td>{correspondence.recipient_name}</td>
-              <td>{correspondence.object_number}</td>
-              <td>{correspondence.status}</td>
-              <td>
-                <SmallButton
-                  icon={MdEdit}
-                  backgroundColorCode="#0269D9"
-                  onClick={() => goToEdit(correspondence.id)}
-                />
-                <SmallButton icon={MdDelete} backgroundColorCode="#C93934" />
-                <SmallButton backgroundColorCode="#4FA845">
-                  Entregar
-                </SmallButton>
+          {correspondences.length !== 0 ? (
+            correspondences.map((correspondence) => (
+              <tr key={correspondence.id}>
+                <td>
+                  <label htmlFor="check">
+                    <input type="checkbox" id="check" />
+                  </label>
+                </td>
+                <td>{correspondence.id}</td>
+                <td>{correspondence.recipient_name}</td>
+                <td>{correspondence.object_number}</td>
+                <td>{correspondence.status}</td>
+                <td>
+                  <SmallButton
+                    icon={MdEdit}
+                    backgroundColorCode="#0269D9"
+                    onClick={() => goToEdit(correspondence.id)}
+                  />
+                  <SmallButton
+                    icon={MdDelete}
+                    backgroundColorCode="#C93934"
+                    onClick={() => deleteCorrespondence(correspondence.id)}
+                  />
+                  <SmallButton backgroundColorCode="#4FA845">
+                    Entregar
+                  </SmallButton>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={6} align="center">
+                Nenhuma correspondência cadastrada.
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </Container>
