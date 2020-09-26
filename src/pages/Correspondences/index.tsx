@@ -6,6 +6,7 @@ import { Form } from '@unform/web';
 
 import { GoSearch } from 'react-icons/go';
 import { MdEdit, MdDelete } from 'react-icons/md';
+import { AiOutlineReload } from 'react-icons/ai';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -16,6 +17,10 @@ import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
 
 import { Container } from './styles';
+
+interface searchInput {
+  query: string;
+}
 
 interface CorrespondenceData {
   id: number;
@@ -89,11 +94,28 @@ const Correspondences: React.FC = () => {
     loadCorrespondences();
   }, [loadCorrespondences]);
 
+  const handleSubmit = useCallback(
+    async (query: searchInput) => {
+      if (query.query) {
+        const result = await api.get(`correspondences/?query=${query.query}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setCorrespondences(result.data);
+      }
+    },
+    [token],
+  );
+
   return (
     <Container>
       <div>
-        <Form onSubmit={() => {}} ref={formRef}>
+        <Form onSubmit={handleSubmit} ref={formRef}>
           <Input name="query" icon={GoSearch} placeholder="Buscar" autoFocus />
+          <Button type="submit">
+            <GoSearch size={20} />
+          </Button>
         </Form>
 
         <Button
@@ -146,11 +168,24 @@ const Correspondences: React.FC = () => {
               </tr>
             ))
           ) : (
-            <tr>
-              <td colSpan={6} align="center">
-                Nenhuma correspondência cadastrada.
-              </td>
-            </tr>
+            <>
+              <tr>
+                <td colSpan={6} align="center">
+                  Nenhuma correspondência encontrada.
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={6}>
+                  <SmallButton
+                    backgroundColorCode="#46AC91"
+                    icon={AiOutlineReload}
+                    onClick={loadCorrespondences}
+                  >
+                    Recarregar
+                  </SmallButton>
+                </td>
+              </tr>
+            </>
           )}
         </tbody>
       </table>

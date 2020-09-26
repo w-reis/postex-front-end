@@ -28,7 +28,7 @@ export const Container = styled.button<ContainerProps>`
   ${($props) =>
     $props.hasText &&
     css`
-      a svg {
+      svg {
         margin-right: 4px;
         height: 16px;
       }
