@@ -15,7 +15,7 @@ export const Container = styled.div`
     justify-content: space-between;
     align-items: flex-start;
 
-    form {
+    .search-input {
       width: 100%;
       max-width: 392px;
       margin-bottom: 16px;
@@ -45,10 +45,15 @@ export const Container = styled.div`
     }
 
     @media (min-width: 994px) {
-      form {
+      .search-input {
+        width: 100%;
         align-self: flex-start;
       }
     }
+  }
+
+  form {
+    width: 100%;
   }
 
   table {

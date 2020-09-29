@@ -9,6 +9,7 @@ import { MdEdit, MdDelete } from 'react-icons/md';
 import { AiOutlineReload } from 'react-icons/ai';
 
 import Input from '../../components/Input';
+import Checkbox from '../../components/Checkbox';
 import Button from '../../components/Button';
 import SmallButton from '../../components/SmallButton';
 
@@ -72,7 +73,7 @@ const Correspondences: React.FC = () => {
   const deleteCorrespondence = useCallback(
     async (id: number) => {
       try {
-        await api.delete(`/correspondences/${id.toString()}`, {
+        await api.delete(`/correspondences/?idGroup[]=${id.toString()}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -84,6 +85,34 @@ const Correspondences: React.FC = () => {
           type: 'error',
           title: 'Erro ao deletar;',
           description: 'Ocorreu um erro ao deletar a correspondência.',
+        });
+      }
+    },
+    [addToast, loadCorrespondences, token],
+  );
+
+  const deleteCorrespondences = useCallback(
+    async (ids: string[]) => {
+      try {
+        if (ids.length !== 0) {
+          await api.delete(
+            `/correspondences/?${ids.map((id) => {
+              return `idGroup[]=${id}`;
+            })}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          );
+        }
+
+        loadCorrespondences();
+      } catch (error) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao deletar',
+          description: 'Ocorreu um erro ao deletar as correspondências.',
         });
       }
     },
@@ -108,10 +137,19 @@ const Correspondences: React.FC = () => {
     [token],
   );
 
+  const submitTable = useCallback(
+    async (ids: object) => {
+      deleteCorrespondences(
+        Object.values(ids).filter((id) => id !== undefined),
+      );
+    },
+    [deleteCorrespondences],
+  );
+
   return (
     <Container>
       <div>
-        <Form onSubmit={handleSubmit} ref={formRef}>
+        <Form onSubmit={handleSubmit} ref={formRef} className="search-input">
           <Input name="query" icon={GoSearch} placeholder="Buscar" autoFocus />
           <Button type="submit">
             <GoSearch size={20} />
@@ -125,70 +163,75 @@ const Correspondences: React.FC = () => {
           Novo
         </Button>
       </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th> </th>
-            <th>ID</th>
-            <th>Destinatário</th>
-            <th>Nº do objeto</th>
-            <th>Status</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {correspondences.length !== 0 ? (
-            correspondences.map((correspondence) => (
-              <tr key={correspondence.id}>
-                <td>
-                  <label htmlFor="check">
-                    <input type="checkbox" id="check" />
-                  </label>
-                </td>
-                <td>{correspondence.id}</td>
-                <td>{correspondence.recipient_name}</td>
-                <td>{correspondence.object_number}</td>
-                <td>{correspondence.status}</td>
-                <td>
-                  <SmallButton
-                    icon={MdEdit}
-                    backgroundColorCode="#0269D9"
-                    onClick={() => goToEdit(correspondence.id)}
-                  />
-                  <SmallButton
-                    icon={MdDelete}
-                    backgroundColorCode="#C93934"
-                    onClick={() => deleteCorrespondence(correspondence.id)}
-                  />
-                  <SmallButton backgroundColorCode="#4FA845">
-                    Entregar
-                  </SmallButton>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <>
-              <tr>
-                <td colSpan={6} align="center">
-                  Nenhuma correspondência encontrada.
-                </td>
-              </tr>
-              <tr>
-                <td colSpan={6}>
-                  <SmallButton
-                    backgroundColorCode="#46AC91"
-                    icon={AiOutlineReload}
-                    onClick={loadCorrespondences}
-                  >
-                    Recarregar
-                  </SmallButton>
-                </td>
-              </tr>
-            </>
-          )}
-        </tbody>
-      </table>
+      <Form ref={formRef} onSubmit={submitTable}>
+        <table>
+          <thead>
+            <tr>
+              <th> </th>
+              <th>ID</th>
+              <th>Destinatário</th>
+              <th>Nº do objeto</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {correspondences.length !== 0 ? (
+              correspondences.map((correspondence) => (
+                <tr key={correspondence.id}>
+                  <td>
+                    <Checkbox
+                      name={`correspondence${correspondence.id}`}
+                      value={correspondence.id}
+                    />
+                  </td>
+                  <td>{correspondence.id}</td>
+                  <td>{correspondence.recipient_name}</td>
+                  <td>{correspondence.object_number}</td>
+                  <td>{correspondence.status}</td>
+                  <td>
+                    <SmallButton
+                      icon={MdEdit}
+                      backgroundColorCode="#0269D9"
+                      onClick={() => goToEdit(correspondence.id)}
+                    />
+                    <SmallButton
+                      icon={MdDelete}
+                      backgroundColorCode="#C93934"
+                      onClick={() => deleteCorrespondence(correspondence.id)}
+                    />
+                    <SmallButton backgroundColorCode="#4FA845">
+                      Entregar
+                    </SmallButton>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <>
+                <tr>
+                  <td colSpan={6} align="center">
+                    Nenhuma correspondência encontrada.
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan={6}>
+                    <SmallButton
+                      backgroundColorCode="#46AC91"
+                      icon={AiOutlineReload}
+                      onClick={loadCorrespondences}
+                    >
+                      Recarregar
+                    </SmallButton>
+                  </td>
+                </tr>
+              </>
+            )}
+          </tbody>
+        </table>
+        <SmallButton backgroundColorCode="#0748b4" type="submit">
+          Deletar selecionadas
+        </SmallButton>
+      </Form>
     </Container>
   );
 };
