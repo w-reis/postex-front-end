@@ -204,24 +204,11 @@ const Correspondences: React.FC = () => {
                 </tr>
               ))
             ) : (
-              <>
-                <tr>
-                  <td colSpan={6} align="center">
-                    Nenhuma correspondência encontrada.
-                  </td>
-                </tr>
-                <tr>
-                  <td colSpan={6}>
-                    <SmallButton
-                      backgroundColorCode="#46AC91"
-                      icon={AiOutlineReload}
-                      onClick={loadCorrespondences}
-                    >
-                      Recarregar
-                    </SmallButton>
-                  </td>
-                </tr>
-              </>
+              <tr>
+                <td colSpan={6} align="center">
+                  Nenhuma correspondência encontrada.
+                </td>
+              </tr>
             )}
           </tbody>
         </table>
