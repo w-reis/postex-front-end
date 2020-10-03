@@ -19,10 +19,6 @@ import { useToast } from '../../hooks/toast';
 
 import { Container } from './styles';
 
-interface searchInput {
-  query: string;
-}
-
 interface CorrespondenceData {
   id: number;
   recipient_name: string;
@@ -42,23 +38,31 @@ const Correspondences: React.FC = () => {
   const { token, signOut } = useAuth();
   const { addToast } = useToast();
 
-  const loadCorrespondences = useCallback(async () => {
-    try {
-      const response = await api.get('correspondences', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setCorrespondences(response.data);
-    } catch (error) {
-      addToast({
-        type: 'error',
-        title: 'Sua sessão expirou!',
-        description: 'Faça login novamente para utilizar o Postex.',
-      });
-      signOut();
-    }
-  }, [token, addToast, signOut]);
+  const loadCorrespondences = useCallback(
+    async ({ page = 1, limit = 5, query = '' }) => {
+      try {
+        const response = await api.get(
+          `correspondences/?query=${query}&page=${page}&limit=${limit}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        console.log(response.data);
+        setCorrespondences(response.data.result);
+      } catch (error) {
+        addToast({
+          type: 'error',
+          title: 'Sua sessão expirou!',
+          description: 'Faça login novamente para utilizar o Postex.',
+        });
+        signOut();
+      }
+    },
+    [token, addToast, signOut],
+  );
 
   const goToEdit = useCallback(
     (id: number) => {
@@ -79,7 +83,7 @@ const Correspondences: React.FC = () => {
           },
         });
 
-        loadCorrespondences();
+        loadCorrespondences({});
       } catch (error) {
         addToast({
           type: 'error',
@@ -96,7 +100,7 @@ const Correspondences: React.FC = () => {
       try {
         if (ids.length !== 0) {
           await api.delete(
-            `/correspondences/?${ids.map((id) => {
+            `/correspondences?${ids.map((id) => {
               return `idGroup[]=${id}`;
             })}`,
             {
@@ -107,7 +111,7 @@ const Correspondences: React.FC = () => {
           );
         }
 
-        loadCorrespondences();
+        loadCorrespondences({});
       } catch (error) {
         addToast({
           type: 'error',
@@ -120,21 +124,16 @@ const Correspondences: React.FC = () => {
   );
 
   useEffect(() => {
-    loadCorrespondences();
+    loadCorrespondences({});
   }, [loadCorrespondences]);
 
   const handleSubmit = useCallback(
-    async (query: searchInput) => {
-      if (query.query) {
-        const result = await api.get(`correspondences/?query=${query.query}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setCorrespondences(result.data);
+    async ({ query }) => {
+      if (query) {
+        loadCorrespondences({ query });
       }
     },
-    [token],
+    [loadCorrespondences],
   );
 
   const submitTable = useCallback(
@@ -192,6 +191,7 @@ const Correspondences: React.FC = () => {
                   <td>
                     <SmallButton
                       icon={MdEdit}
+                      type="button"
                       backgroundColorCode="#0269D9"
                       onClick={() => goToEdit(correspondence.id)}
                     />
@@ -228,7 +228,18 @@ const Correspondences: React.FC = () => {
             )}
           </tbody>
         </table>
-        <SmallButton backgroundColorCode="#0748b4" type="submit">
+        <SmallButton
+          backgroundColorCode="#46AC91"
+          icon={AiOutlineReload}
+          onClick={loadCorrespondences}
+        >
+          Recarregar
+        </SmallButton>
+        <SmallButton
+          icon={MdDelete}
+          backgroundColorCode="#C93934"
+          type="submit"
+        >
           Deletar selecionadas
         </SmallButton>
       </Form>
