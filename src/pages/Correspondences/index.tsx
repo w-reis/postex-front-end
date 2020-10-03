@@ -99,16 +99,13 @@ const Correspondences: React.FC = () => {
     async (ids: string[]) => {
       try {
         if (ids.length !== 0) {
-          await api.delete(
-            `/correspondences?${ids.map((id) => {
-              return `idGroup[]=${id}`;
-            })}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
+          const querys = ids.map((id) => `idGroup[]=${id}`);
+
+          await api.delete(`/correspondences?${querys.join('&')}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
             },
-          );
+          });
         }
 
         loadCorrespondences({});
