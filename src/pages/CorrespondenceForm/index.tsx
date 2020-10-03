@@ -144,7 +144,7 @@ const CorrespondenceForm: React.FC = () => {
         } else {
           addToast({
             type: 'success',
-            title: 'Cadastro realizado!',
+            title: 'Nova correspondência!',
             description: 'A correspondência foi cadastrada com sucesso.',
           });
         }
