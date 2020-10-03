@@ -184,7 +184,13 @@ const Correspondences: React.FC = () => {
                   <td>{correspondence.id}</td>
                   <td>{correspondence.recipient_name}</td>
                   <td>{correspondence.object_number}</td>
-                  <td>{correspondence.status}</td>
+                  <td>
+                    {correspondence.status === 'pendente' && (
+                      <span style={{ color: '#C93934', fontWeight: 'bold' }}>
+                        {correspondence.status}
+                      </span>
+                    )}
+                  </td>
                   <td>
                     <SmallButton
                       icon={MdEdit}
