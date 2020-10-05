@@ -255,7 +255,7 @@ const Correspondences: React.FC = () => {
           Deletar selecionadas
         </SmallButton>
       </Form>
-      {correspondences.length !== 0 && (
+      {correspondences.length !== 0 && paginateInfo.totalPages > 1 && (
         <Pagination
           first={() => loadCorrespondences({ page: 1 })}
           prev={() =>
