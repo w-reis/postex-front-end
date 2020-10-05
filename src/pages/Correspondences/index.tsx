@@ -41,13 +41,10 @@ const Correspondences: React.FC = () => {
   const [correspondences, setCorrespondences] = useState<CorrespondenceData[]>(
     [],
   );
-
   const [paginateInfo, setPaginateInfo] = useState<PaginateInfo>(
     {} as PaginateInfo,
   );
-
   const [lastQuery, setLastQuery] = useState('');
-
   const history = useHistory();
   const formRef = useRef<FormHandles>(null);
   const { token, signOut } = useAuth();
@@ -136,10 +133,6 @@ const Correspondences: React.FC = () => {
     [addToast, loadCorrespondences, token],
   );
 
-  useEffect(() => {
-    loadCorrespondences({});
-  }, [loadCorrespondences]);
-
   const handleSubmit = useCallback(
     async ({ query }) => {
       if (query) {
@@ -150,7 +143,7 @@ const Correspondences: React.FC = () => {
     [loadCorrespondences],
   );
 
-  const submitTable = useCallback(
+  const handleSubmitCheckboxes = useCallback(
     async (ids: object) => {
       deleteCorrespondences(
         Object.values(ids).filter((id) => id !== undefined),
@@ -158,6 +151,10 @@ const Correspondences: React.FC = () => {
     },
     [deleteCorrespondences],
   );
+
+  useEffect(() => {
+    loadCorrespondences({});
+  }, [loadCorrespondences]);
 
   return (
     <Container>
@@ -176,7 +173,7 @@ const Correspondences: React.FC = () => {
           Novo
         </Button>
       </div>
-      <Form ref={formRef} onSubmit={submitTable}>
+      <Form ref={formRef} onSubmit={handleSubmitCheckboxes}>
         <table>
           <thead>
             <tr>
