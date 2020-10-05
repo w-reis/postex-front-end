@@ -1,22 +1,23 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { Link, useLocation, useHistory } from 'react-router-dom';
+import * as Yup from 'yup';
+
+import { Form } from '@unform/web';
+import { FormHandles } from '@unform/core';
 
 import { MdKeyboardBackspace } from 'react-icons/md';
 import { GoSearch } from 'react-icons/go';
 
-import { Form } from '@unform/web';
-import { FormHandles } from '@unform/core';
-import * as Yup from 'yup';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
 
-import api from '../../services/api';
 import getValidationErrors from '../../utils/getValidationErrors';
 import PreventDotEandSignsOnInput from '../../utils/preventDotEandSignsOnInput';
 
+import api from '../../services/api';
+
 import { useToast } from '../../hooks/toast';
 import { useAuth } from '../../hooks/auth';
-
-import Input from '../../components/Input';
-import Button from '../../components/Button';
 
 import { Container, Row, Label } from './styles';
 
