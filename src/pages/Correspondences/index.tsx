@@ -12,8 +12,10 @@ import Input from '../../components/Input';
 import Checkbox from '../../components/Checkbox';
 import Button from '../../components/Button';
 import SmallButton from '../../components/SmallButton';
+import Pagination from '../../components/Pagination';
 
 import api from '../../services/api';
+
 import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
 
@@ -28,10 +30,23 @@ interface CorrespondenceData {
   updated_at: Date;
 }
 
+interface PaginateInfo {
+  currentPage: number;
+  totalPages: number;
+  previous?: { page: number; limit: number };
+  next?: { page: number; limit: number };
+}
+
 const Correspondences: React.FC = () => {
   const [correspondences, setCorrespondences] = useState<CorrespondenceData[]>(
     [],
   );
+
+  const [paginateInfo, setPaginateInfo] = useState<PaginateInfo>(
+    {} as PaginateInfo,
+  );
+
+  const [lastQuery, setLastQuery] = useState('');
 
   const history = useHistory();
   const formRef = useRef<FormHandles>(null);
@@ -39,7 +54,7 @@ const Correspondences: React.FC = () => {
   const { addToast } = useToast();
 
   const loadCorrespondences = useCallback(
-    async ({ page = 1, limit = 5, query = '' }) => {
+    async ({ page = 1, limit = 7, query = lastQuery }) => {
       try {
         const response = await api.get(
           `correspondences/?query=${query}&page=${page}&limit=${limit}`,
@@ -50,8 +65,10 @@ const Correspondences: React.FC = () => {
           },
         );
 
-        console.log(response.data);
         setCorrespondences(response.data.result);
+        delete response.data.result;
+
+        setPaginateInfo(response.data);
       } catch (error) {
         addToast({
           type: 'error',
@@ -61,7 +78,7 @@ const Correspondences: React.FC = () => {
         signOut();
       }
     },
-    [token, addToast, signOut],
+    [token, addToast, signOut, lastQuery],
   );
 
   const goToEdit = useCallback(
@@ -106,9 +123,8 @@ const Correspondences: React.FC = () => {
               Authorization: `Bearer ${token}`,
             },
           });
+          loadCorrespondences({});
         }
-
-        loadCorrespondences({});
       } catch (error) {
         addToast({
           type: 'error',
@@ -129,6 +145,7 @@ const Correspondences: React.FC = () => {
       if (query) {
         loadCorrespondences({ query });
       }
+      setLastQuery(query);
     },
     [loadCorrespondences],
   );
@@ -221,9 +238,12 @@ const Correspondences: React.FC = () => {
         <SmallButton
           backgroundColorCode="#46AC91"
           icon={AiOutlineReload}
-          onClick={loadCorrespondences}
+          onClick={() => {
+            setLastQuery('');
+            loadCorrespondences({});
+          }}
         >
-          Recarregar
+          Limpar
         </SmallButton>
         <SmallButton
           icon={MdDelete}
@@ -233,6 +253,20 @@ const Correspondences: React.FC = () => {
           Deletar selecionadas
         </SmallButton>
       </Form>
+      {correspondences.length !== 0 && (
+        <Pagination
+          first={() => loadCorrespondences({ page: 1 })}
+          prev={() =>
+            paginateInfo.previous &&
+            loadCorrespondences({ page: paginateInfo.previous?.page })
+          }
+          next={() =>
+            paginateInfo.next &&
+            loadCorrespondences({ page: paginateInfo.next?.page })
+          }
+          last={() => loadCorrespondences({ page: paginateInfo.totalPages })}
+        />
+      )}
     </Container>
   );
 };

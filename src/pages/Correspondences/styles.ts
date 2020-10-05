@@ -31,7 +31,7 @@ export const Container = styled.div`
       }
     }
 
-    button {
+    & > button {
       height: 47px;
       padding: 11px;
       align-content: flex-end;
@@ -80,7 +80,7 @@ export const Container = styled.div`
       line-height: 20px;
       text-align: left;
       vertical-align: middle;
-      border-top: 1px solid #cccccc;
+      border-bottom: 1px solid #cccccc;
     }
 
     td:nth-child(-n + 2) {
