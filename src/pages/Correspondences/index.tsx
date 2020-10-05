@@ -257,6 +257,8 @@ const Correspondences: React.FC = () => {
       </Form>
       {correspondences.length !== 0 && paginateInfo.totalPages > 1 && (
         <Pagination
+          current={paginateInfo.currentPage}
+          limit={paginateInfo.totalPages}
           first={() => loadCorrespondences({ page: 1 })}
           prev={() =>
             paginateInfo.previous &&
