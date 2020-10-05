@@ -160,7 +160,12 @@ const Correspondences: React.FC = () => {
     <Container>
       <div>
         <Form onSubmit={handleSubmit} ref={formRef} className="search-input">
-          <Input name="query" icon={GoSearch} placeholder="Buscar" autoFocus />
+          <Input
+            name="query"
+            icon={GoSearch}
+            placeholder="Buscar destinatário"
+            autoFocus
+          />
           <Button type="submit">
             <GoSearch size={20} />
           </Button>
