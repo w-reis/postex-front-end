@@ -55,10 +55,6 @@ const CorrespondenceForm: React.FC = () => {
     }
   }, [pathname, state, token, history]);
 
-  useEffect(() => {
-    checkEditCondition();
-  }, [checkEditCondition]);
-
   const createCorrespondence = useCallback(
     async (data: Omit<CorrespondenceFormData, 'id'>) => {
       await api.post('correspondences', data, {
@@ -176,6 +172,10 @@ const CorrespondenceForm: React.FC = () => {
     ],
   );
 
+  useEffect(() => {
+    checkEditCondition();
+  }, [checkEditCondition]);
+
   return (
     <Container>
       <div>
@@ -212,6 +212,7 @@ const CorrespondenceForm: React.FC = () => {
           <Input
             name="object_number"
             defaultValue={correspondence.object_number}
+            maxLength={9}
           />
         </Row>
         <Row>
