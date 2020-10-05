@@ -58,7 +58,7 @@ const CorrespondenceForm: React.FC = () => {
     checkEditCondition();
   }, [checkEditCondition]);
 
-  const CreateCorrespondence = useCallback(
+  const createCorrespondence = useCallback(
     async (data: Omit<CorrespondenceFormData, 'id'>) => {
       await api.post('correspondences', data, {
         headers: {
@@ -69,7 +69,7 @@ const CorrespondenceForm: React.FC = () => {
     [token],
   );
 
-  const UpdateCorrespondence = useCallback(
+  const updateCorrespondence = useCallback(
     async (data: Omit<CorrespondenceFormData, 'id'>, id: string) => {
       await api.put(`correspondences/${id}`, data, {
         headers: {
@@ -106,7 +106,7 @@ const CorrespondenceForm: React.FC = () => {
         );
 
         if (correspondence.id && !recipient_id) {
-          await UpdateCorrespondence(
+          await updateCorrespondence(
             {
               recipient_name,
               object_number,
@@ -114,7 +114,7 @@ const CorrespondenceForm: React.FC = () => {
             correspondence.id,
           );
         } else if (correspondence.id && recipient_id) {
-          await UpdateCorrespondence(
+          await updateCorrespondence(
             {
               recipient_id,
               recipient_name,
@@ -123,12 +123,12 @@ const CorrespondenceForm: React.FC = () => {
             correspondence.id,
           );
         } else if (!recipient_id) {
-          await CreateCorrespondence({
+          await createCorrespondence({
             recipient_name,
             object_number,
           });
         } else {
-          await CreateCorrespondence({
+          await createCorrespondence({
             recipient_name,
             recipient_id,
             object_number,
@@ -167,9 +167,9 @@ const CorrespondenceForm: React.FC = () => {
       }
     },
     [
-      CreateCorrespondence,
+      createCorrespondence,
       addToast,
-      UpdateCorrespondence,
+      updateCorrespondence,
       correspondence,
       history,
     ],
