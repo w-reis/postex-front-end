@@ -133,6 +133,22 @@ const Correspondences: React.FC = () => {
     [addToast, loadCorrespondences, token],
   );
 
+  const deliverCorrespondence = useCallback(
+    async (id: number) => {
+      await api.patch(
+        `correspondences/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      loadCorrespondences({});
+    },
+    [token, loadCorrespondences],
+  );
+
   const handleSubmit = useCallback(
     async ({ query }) => {
       if (query) {
@@ -209,9 +225,17 @@ const Correspondences: React.FC = () => {
                         {correspondence.status}
                       </span>
                     )}
+                    {correspondence.status === 'entregue' && (
+                      <span style={{ color: '#4FA845', fontWeight: 'bold' }}>
+                        {correspondence.status}
+                      </span>
+                    )}
                   </td>
                   <td>
-                    <SmallButton backgroundColorCode="#4FA845">
+                    <SmallButton
+                      backgroundColorCode="#4FA845"
+                      onClick={() => deliverCorrespondence(correspondence.id)}
+                    >
                       Entregar
                     </SmallButton>
                     <SmallButton
