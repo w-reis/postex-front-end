@@ -61,6 +61,22 @@ export const Container = styled.div`
       }
     }
   }
+
+  .search-input {
+    width: 100%;
+    max-width: 392px;
+    margin-bottom: 16px;
+    display: flex;
+
+    & > div {
+      padding: 11px;
+    }
+
+    & > button {
+      width: 50px;
+      margin-left: 8px;
+    }
+  }
 `;
 
 export const Row = styled.div`

@@ -17,6 +17,7 @@ export const Container = styled.div`
 
     .search-input {
       width: 100%;
+      height: 47px;
       max-width: 392px;
       margin-bottom: 16px;
       display: flex;
@@ -27,6 +28,7 @@ export const Container = styled.div`
 
       & > button {
         width: 50px;
+        height: 47px;
         margin-left: 8px;
       }
     }

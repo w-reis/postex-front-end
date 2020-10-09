@@ -7,9 +7,11 @@ import { FormHandles } from '@unform/core';
 
 import { MdKeyboardBackspace } from 'react-icons/md';
 import { GoSearch } from 'react-icons/go';
+import { RiUserSearchFill } from 'react-icons/ri';
 
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import Modal from '../../components/Modal';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 import PreventDotEandSignsOnInput from '../../utils/preventDotEandSignsOnInput';
@@ -28,10 +30,28 @@ interface CorrespondenceFormData {
   id: string;
 }
 
+interface RecipientData {
+  id: number;
+  name: string;
+  email: string;
+  address: string;
+  number: string;
+  complement: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  CEP: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
 const CorrespondenceForm: React.FC = () => {
   const [correspondence, setCorrespondence] = useState<CorrespondenceFormData>(
     {} as CorrespondenceFormData,
   );
+  const [recipient, setRecipient] = useState<RecipientData[]>([]);
+  const [show, setShow] = useState(false);
+
   const formRef = useRef<FormHandles>(null);
 
   const { addToast } = useToast();
@@ -172,12 +192,53 @@ const CorrespondenceForm: React.FC = () => {
     ],
   );
 
+  const handleShow = useCallback(() => {
+    show ? setShow(false) : setShow(true);
+  }, [show]);
+
+  const submitSearch = useCallback(
+    async ({ query }: { query?: string }) => {
+      if (query) {
+        const response = await api.get(`/recipients?recipient=${query}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setRecipient(response.data);
+      } else {
+        setRecipient([]);
+      }
+    },
+    [token],
+  );
+
   useEffect(() => {
     checkEditCondition();
   }, [checkEditCondition]);
 
   return (
     <Container>
+      <Modal
+        icon={RiUserSearchFill}
+        title="Buscar destinatário"
+        show={show}
+        closeFunction={handleShow}
+      >
+        <Form onSubmit={submitSearch} ref={formRef} className="search-input">
+          <Input
+            name="query"
+            icon={GoSearch}
+            autoFocus
+            defaultValue={
+              correspondence.recipient_name &&
+              correspondence.recipient_name.split(' ')[0]
+            }
+          />
+          <Button type="submit">
+            <GoSearch size={20} />
+          </Button>
+        </Form>
+      </Modal>
       <div>
         <Link to="/">
           <MdKeyboardBackspace size={24} />
@@ -188,7 +249,7 @@ const CorrespondenceForm: React.FC = () => {
         <Row>
           <Label>Id do destinatário</Label>
           <div>
-            <Button type="button">
+            <Button type="button" onClick={handleShow}>
               <GoSearch size="24" />
             </Button>
             <Input
