@@ -233,12 +233,6 @@ const Correspondences: React.FC = () => {
                   </td>
                   <td>
                     <SmallButton
-                      backgroundColorCode="#4FA845"
-                      onClick={() => deliverCorrespondence(correspondence.id)}
-                    >
-                      Entregar
-                    </SmallButton>
-                    <SmallButton
                       icon={MdEdit}
                       type="button"
                       backgroundColorCode="#0269D9"
@@ -249,6 +243,14 @@ const Correspondences: React.FC = () => {
                       backgroundColorCode="#C93934"
                       onClick={() => deleteCorrespondence(correspondence.id)}
                     />
+                    {correspondence.status !== 'entregue' && (
+                      <SmallButton
+                        backgroundColorCode="#4FA845"
+                        onClick={() => deliverCorrespondence(correspondence.id)}
+                      >
+                        Entregar
+                      </SmallButton>
+                    )}
                   </td>
                 </tr>
               ))
