@@ -15,7 +15,7 @@ export const Container = styled.div<ContainerProps>`
   display: flex;
   align-items: center;
 
-  border: 2px solid #717171;
+  border: 1px solid #717171;
   color: #717171;
 
   & + div {
