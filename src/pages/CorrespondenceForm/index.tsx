@@ -7,7 +7,7 @@ import { FormHandles } from '@unform/core';
 
 import { MdKeyboardBackspace } from 'react-icons/md';
 import { GoSearch } from 'react-icons/go';
-import { RiUserSearchFill } from 'react-icons/ri';
+import { RiUserSearchFill, RiMailCheckLine } from 'react-icons/ri';
 
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -22,6 +22,8 @@ import { useToast } from '../../hooks/toast';
 import { useAuth } from '../../hooks/auth';
 
 import { Container, Row, Label } from './styles';
+import RecipientItem from '../../components/RecipientItem';
+import SmallButton from '../../components/SmallButton';
 
 interface CorrespondenceFormData {
   recipient_name: string;
@@ -194,6 +196,8 @@ const CorrespondenceForm: React.FC = () => {
 
   const handleShow = useCallback(() => {
     show ? setShow(false) : setShow(true);
+    setRecipient([]);
+    formRef.current?.setFieldValue('query', '');
   }, [show]);
 
   const submitSearch = useCallback(
@@ -238,6 +242,23 @@ const CorrespondenceForm: React.FC = () => {
             <GoSearch size={20} />
           </Button>
         </Form>
+        <div>
+          {recipient.map((item) => (
+            <RecipientItem recipient={item} key={item.id}>
+              <SmallButton
+                icon={RiMailCheckLine}
+                backgroundColorCode="#23407E"
+                onClick={() => {
+                  formRef.current?.setFieldValue('recipient_id', item.id);
+                  formRef.current?.setFieldValue('recipient_name', item.name);
+                  handleShow();
+                }}
+              >
+                Vincular
+              </SmallButton>
+            </RecipientItem>
+          ))}
+        </div>
       </Modal>
       <div>
         <Link to="/">
