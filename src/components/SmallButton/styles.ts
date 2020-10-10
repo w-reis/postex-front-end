@@ -22,7 +22,7 @@ export const Container = styled.button<ContainerProps>`
 
   span {
     font-weight: 600;
-    transform: translateY(-1px);
+    transform: translateY(0px);
   }
 
   ${($props) =>
