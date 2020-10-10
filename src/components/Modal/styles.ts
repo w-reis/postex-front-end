@@ -18,7 +18,7 @@ export const Container = styled.article<ContainerProps>`
 
   .modal {
     width: 100%;
-    max-width: 700px;
+    max-width: 550px;
     background: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 4px;
@@ -56,6 +56,12 @@ export const Container = styled.article<ContainerProps>`
         color: #1c1c1c;
       }
     }
+  }
+
+  .modal-body > div {
+    max-height: 70vh;
+    overflow-y: scroll;
+    max-width: 100%;
   }
 
   ${(props) =>
