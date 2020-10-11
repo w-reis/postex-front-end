@@ -30,7 +30,7 @@ const Sidebar: React.FC = () => {
           </Link>
         </li>
         <li>
-          <Link to="/">
+          <Link to="/users">
             <MdPeople size="24" />
             Usuários
           </Link>
