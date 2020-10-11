@@ -14,7 +14,7 @@ export default createGlobalStyle`
     height: 100%;
   }
 
-  body, input, button {
+  body, input, select, button {
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
   }
