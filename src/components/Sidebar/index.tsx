@@ -29,12 +29,14 @@ const Sidebar: React.FC = () => {
             Correspondências
           </Link>
         </li>
-        <li>
-          <Link to="/users">
-            <MdPeople size="24" />
-            Usuários
-          </Link>
-        </li>
+        {user.role === 'adm' && (
+          <li>
+            <Link to="/users">
+              <MdPeople size="24" />
+              Usuários
+            </Link>
+          </li>
+        )}
       </ul>
     </Container>
   );
