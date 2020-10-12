@@ -39,7 +39,7 @@ const UserForm: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
   const { addToast } = useToast();
-  const { token } = useAuth();
+  const { token, user: authUser } = useAuth();
   const { state, pathname } = useLocation();
   const history = useHistory();
 
@@ -184,13 +184,14 @@ const UserForm: React.FC = () => {
   }, [user.role]);
 
   useEffect(() => {
+    authUser.role !== 'adm' && history.push('/');
     checkEditCondition().then(handleSelectOptions);
-  }, [checkEditCondition, handleSelectOptions]);
+  }, [checkEditCondition, handleSelectOptions, history, authUser.role]);
 
   return (
     <Container>
       <div>
-        <Link to="/">
+        <Link to="/users">
           <MdKeyboardBackspace size={24} />
           Voltar
         </Link>

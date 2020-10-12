@@ -44,7 +44,7 @@ const Users: React.FC = () => {
   const [lastQuery, setLastQuery] = useState('');
   const history = useHistory();
   const formRef = useRef<FormHandles>(null);
-  const { token, signOut } = useAuth();
+  const { token, signOut, user } = useAuth();
   const { addToast } = useToast();
 
   const loadUsers = useCallback(
@@ -148,8 +148,9 @@ const Users: React.FC = () => {
   );
 
   useEffect(() => {
+    user.role !== 'adm' && history.push('/');
     loadUsers({});
-  }, [loadUsers]);
+  }, [loadUsers, history, user.role]);
 
   return (
     <Container>
