@@ -35,6 +35,8 @@ const Routes: React.FC = () => {
       <Route path="/users" exact component={Users} isPrivate />
 
       <Route path="/users/edit" component={UserForm} isPrivate />
+
+      <Route path="/users/create" component={UserForm} isPrivate />
     </Switch>
   );
 };

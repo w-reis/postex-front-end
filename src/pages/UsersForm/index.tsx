@@ -23,6 +23,7 @@ import { Container, Row, Label } from './styles';
 interface UserFormData {
   username: string;
   role: string;
+  password?: string;
   id: string;
 }
 
@@ -81,7 +82,7 @@ const UserForm: React.FC = () => {
   );
 
   const handleSubmit = useCallback(
-    async ({ username, role }: UserFormData) => {
+    async ({ username, role, password }: UserFormData) => {
       try {
         formRef.current?.setErrors({});
 
@@ -100,7 +101,7 @@ const UserForm: React.FC = () => {
           },
         );
 
-        if (user.id) {
+        if (user.id && !password) {
           await updateUser(
             {
               username,
@@ -108,9 +109,24 @@ const UserForm: React.FC = () => {
             },
             user.id,
           );
+        } else if (user.id && password) {
+          await updateUser(
+            {
+              password,
+              username,
+              role,
+            },
+            user.id,
+          );
+        } else if (!password) {
+          await createUser({
+            username,
+            role,
+          });
         } else {
           await createUser({
             username,
+            password,
             role,
           });
         }
@@ -188,6 +204,15 @@ const UserForm: React.FC = () => {
           <Label>Função</Label>
           <Select name="role" options={options} />
         </Row>
+        {!user.id && (
+          <>
+            <Row>
+              <Label>Senha</Label>
+              <Input name="password" />
+            </Row>
+            <Row />
+          </>
+        )}
         <Row>
           <Label> </Label>
           <Button type="submit">Gravar</Button>

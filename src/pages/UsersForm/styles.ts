@@ -98,7 +98,7 @@ export const Row = styled.div`
   button {
     margin-top: 8px;
     transition: all 0.5s ease;
-    width: 56px;
+    width: 100px;
     margin-right: 8px;
   }
 
