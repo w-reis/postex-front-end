@@ -5,8 +5,9 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 
 import { GoSearch } from 'react-icons/go';
-import { MdEdit, MdDelete } from 'react-icons/md';
+import { MdEdit, MdDelete, MdClose } from 'react-icons/md';
 import { AiOutlineReload } from 'react-icons/ai';
+import { FcCheckmark } from 'react-icons/fc';
 
 import Input from '../../components/Input';
 import Checkbox from '../../components/Checkbox';
@@ -44,7 +45,7 @@ const Users: React.FC = () => {
   const [lastQuery, setLastQuery] = useState('');
   const history = useHistory();
   const formRef = useRef<FormHandles>(null);
-  const { token, signOut, user } = useAuth();
+  const { token, signOut, user: authUser } = useAuth();
   const { addToast } = useToast();
 
   const loadUsers = useCallback(
@@ -148,9 +149,9 @@ const Users: React.FC = () => {
   );
 
   useEffect(() => {
-    user.role !== 'adm' && history.push('/');
+    authUser.role !== 'adm' && history.push('/');
     loadUsers({});
-  }, [loadUsers, history, user.role]);
+  }, [loadUsers, history, authUser.role]);
 
   return (
     <Container>
@@ -178,6 +179,7 @@ const Users: React.FC = () => {
               <th> </th>
               <th>ID</th>
               <th>Usuário</th>
+              <th>Administrador</th>
               <th>Ações</th>
             </tr>
           </thead>
@@ -190,6 +192,12 @@ const Users: React.FC = () => {
                   </td>
                   <td>{user.id}</td>
                   <td>{user.username}</td>
+                  <td>
+                    {(user.role === 'adm' && <FcCheckmark size={20} />) ||
+                      (user.role === 'user' && (
+                        <MdClose color="red" size={20} />
+                      ))}
+                  </td>
                   <td>
                     <SmallButton
                       icon={MdEdit}
