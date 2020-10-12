@@ -7,6 +7,8 @@ import Route from './Route';
 import SignIn from '../pages/SignIn';
 import Correspondences from '../pages/Correspondences';
 import CorrespondenceForm from '../pages/CorrespondenceForm';
+import UserForm from '../pages/UsersForm';
+import Users from '../pages/Users';
 
 const Routes: React.FC = () => {
   return (
@@ -29,6 +31,10 @@ const Routes: React.FC = () => {
         component={CorrespondenceForm}
         isPrivate
       />
+
+      <Route path="/users" exact component={Users} isPrivate />
+
+      <Route path="/users/edit" component={UserForm} isPrivate />
     </Switch>
   );
 };
