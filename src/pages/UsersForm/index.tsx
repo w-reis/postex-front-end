@@ -1,5 +1,6 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { Link, useLocation, useHistory } from 'react-router-dom';
+
 import * as Yup from 'yup';
 
 import { Form } from '@unform/web';
@@ -10,6 +11,7 @@ import { MdKeyboardBackspace } from 'react-icons/md';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import Button from '../../components/Button';
+import Loading from '../../components/Loading';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -29,13 +31,17 @@ interface UserFormData {
 
 const UserForm: React.FC = () => {
   const [user, setUser] = useState<UserFormData>({} as UserFormData);
+  const [loading, setLoading] = useState(false);
   const [options, setOptions] = useState<
     {
       value: string;
       label: string;
       selected: boolean;
     }[]
-  >([]);
+  >([
+    { value: 'user', label: 'usuário', selected: true },
+    { value: 'adm', label: 'administrador', selected: false },
+  ]);
   const formRef = useRef<FormHandles>(null);
 
   const { addToast } = useToast();
@@ -44,11 +50,12 @@ const UserForm: React.FC = () => {
   const history = useHistory();
 
   const checkEditCondition = useCallback(async () => {
+    setLoading(true);
     if (!state && pathname === '/users/edit') {
       history.replace('/users/create');
     }
     if (state) {
-      const { id } = state;
+      const { id }: any = state;
       const response = await api.get(`users/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -57,6 +64,7 @@ const UserForm: React.FC = () => {
 
       setUser(response.data);
     }
+    setLoading(false);
   }, [pathname, state, token, history]);
 
   const createUser = useCallback(
@@ -196,29 +204,37 @@ const UserForm: React.FC = () => {
           Voltar
         </Link>
       </div>
-      <Form onSubmit={handleSubmit} ref={formRef}>
-        <Row>
-          <Label>Nome de usuário</Label>
-          <Input name="username" defaultValue={user.username} />
-        </Row>
-        <Row>
-          <Label>Função</Label>
-          <Select name="role" options={options} />
-        </Row>
-        {!user.id && (
-          <>
+      {loading ? (
+        <>
+          <Loading />
+        </>
+      ) : (
+        <>
+          <Form onSubmit={handleSubmit} ref={formRef}>
             <Row>
-              <Label>Senha</Label>
-              <Input name="password" />
+              <Label>Nome de usuário</Label>
+              <Input name="username" defaultValue={user.username} />
             </Row>
-            <Row />
-          </>
-        )}
-        <Row>
-          <Label> </Label>
-          <Button type="submit">Gravar</Button>
-        </Row>
-      </Form>
+            <Row>
+              <Label>Função</Label>
+              <Select name="role" options={options} />
+            </Row>
+            {!user.id && (
+              <>
+                <Row>
+                  <Label>Senha</Label>
+                  <Input name="password" />
+                </Row>
+                <Row />
+              </>
+            )}
+            <Row>
+              <Label> </Label>
+              <Button type="submit">Gravar</Button>
+            </Row>
+          </Form>
+        </>
+      )}
     </Container>
   );
 };
