@@ -18,12 +18,6 @@ const Sidebar: React.FC = () => {
       </div>
       <ul>
         <li>
-          <Link to="/">
-            <MdStorage size="24" />
-            Dashboard
-          </Link>
-        </li>
-        <li>
           <Link to="/correspondences">
             <MdMailOutline size="24" />
             Correspondências
