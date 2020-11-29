@@ -21,9 +21,11 @@ import api from '../../services/api';
 import { useToast } from '../../hooks/toast';
 import { useAuth } from '../../hooks/auth';
 
-import { Container, Row, Label } from './styles';
 import RecipientItem from '../../components/RecipientItem';
 import SmallButton from '../../components/SmallButton';
+import Loading from '../../components/Loading';
+
+import { Container, Row, Label } from './styles';
 
 interface CorrespondenceFormData {
   recipient_name: string;
@@ -51,6 +53,8 @@ const CorrespondenceForm: React.FC = () => {
   const [correspondence, setCorrespondence] = useState<CorrespondenceFormData>(
     {} as CorrespondenceFormData,
   );
+
+  const [loading, setLoading] = useState(false);
   const [recipient, setRecipient] = useState<RecipientData[]>([]);
   const [show, setShow] = useState(false);
 
@@ -62,6 +66,7 @@ const CorrespondenceForm: React.FC = () => {
   const history = useHistory();
 
   const checkEditCondition = useCallback(async () => {
+    setLoading(true);
     if (!state && pathname === '/correspondences/edit') {
       history.replace('/correspondences/create');
     }
@@ -75,6 +80,7 @@ const CorrespondenceForm: React.FC = () => {
 
       setCorrespondence(response.data);
     }
+    setLoading(false);
   }, [pathname, state, token, history]);
 
   const createCorrespondence = useCallback(
@@ -266,42 +272,48 @@ const CorrespondenceForm: React.FC = () => {
           Voltar
         </Link>
       </div>
-      <Form onSubmit={handleSubmit} ref={formRef}>
-        <Row>
-          <Label>Id do destinatário</Label>
-          <div>
-            <Button type="button" onClick={handleShow}>
-              <GoSearch size="24" />
-            </Button>
+      {loading ? (
+        <>
+          <Loading />
+        </>
+      ) : (
+        <Form onSubmit={handleSubmit} ref={formRef}>
+          <Row>
+            <Label>Id do destinatário</Label>
+            <div>
+              <Button type="button" onClick={handleShow}>
+                <GoSearch size="24" />
+              </Button>
+              <Input
+                name="recipient_id"
+                type="number"
+                min="1"
+                onKeyDown={PreventDotEandSignsOnInput}
+                defaultValue={correspondence.recipient_id}
+              />
+            </div>
+          </Row>
+          <Row>
+            <Label>Nome do destinatário</Label>
             <Input
-              name="recipient_id"
-              type="number"
-              min="1"
-              onKeyDown={PreventDotEandSignsOnInput}
-              defaultValue={correspondence.recipient_id}
+              name="recipient_name"
+              defaultValue={correspondence.recipient_name}
             />
-          </div>
-        </Row>
-        <Row>
-          <Label>Nome do destinatário</Label>
-          <Input
-            name="recipient_name"
-            defaultValue={correspondence.recipient_name}
-          />
-        </Row>
-        <Row>
-          <Label>Número do objeto</Label>
-          <Input
-            name="object_number"
-            defaultValue={correspondence.object_number}
-            maxLength={9}
-          />
-        </Row>
-        <Row>
-          <Label> </Label>
-          <Button type="submit">Gravar</Button>
-        </Row>
-      </Form>
+          </Row>
+          <Row>
+            <Label>Número do objeto</Label>
+            <Input
+              name="object_number"
+              defaultValue={correspondence.object_number}
+              maxLength={9}
+            />
+          </Row>
+          <Row>
+            <Label> </Label>
+            <Button type="submit">Gravar</Button>
+          </Row>
+        </Form>
+      )}
     </Container>
   );
 };
