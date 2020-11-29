@@ -14,6 +14,7 @@ import Checkbox from '../../components/Checkbox';
 import Button from '../../components/Button';
 import SmallButton from '../../components/SmallButton';
 import Pagination from '../../components/Pagination';
+import Loading from '../../components/Loading';
 
 import api from '../../services/api';
 
@@ -42,6 +43,8 @@ const Users: React.FC = () => {
   const [paginateInfo, setPaginateInfo] = useState<PaginateInfo>(
     {} as PaginateInfo,
   );
+
+  const [loading, setLoading] = useState(false);
   const [lastQuery, setLastQuery] = useState('');
   const history = useHistory();
   const formRef = useRef<FormHandles>(null);
@@ -50,6 +53,7 @@ const Users: React.FC = () => {
 
   const loadUsers = useCallback(
     async ({ page = 1, limit = 7, query = lastQuery }) => {
+      setLoading(true);
       try {
         const response = await api.get(
           `users/?query=${query}&page=${page}&limit=${limit}`,
@@ -71,6 +75,8 @@ const Users: React.FC = () => {
           description: 'Faça login novamente para utilizar o Postex.',
         });
         signOut();
+      } finally {
+        setLoading(false);
       }
     },
     [token, addToast, signOut, lastQuery],
@@ -172,74 +178,81 @@ const Users: React.FC = () => {
           Novo
         </Button>
       </div>
-      <Form ref={formRef} onSubmit={handleSubmitCheckboxes}>
-        <table>
-          <thead>
-            <tr>
-              <th> </th>
-              <th>ID</th>
-              <th>Usuário</th>
-              <th>Administrador</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.length !== 0 ? (
-              users.map((user) => (
-                <tr key={user.id}>
-                  <td>
-                    <Checkbox name={`user${user.id}`} value={user.id} />
-                  </td>
-                  <td>{user.id}</td>
-                  <td>{user.username}</td>
-                  <td>
-                    {(user.role === 'adm' && <FcCheckmark size={20} />) ||
-                      (user.role === 'user' && (
-                        <MdClose color="red" size={20} />
-                      ))}
-                  </td>
-                  <td>
-                    <SmallButton
-                      icon={MdEdit}
-                      type="button"
-                      backgroundColorCode="#0269D9"
-                      onClick={() => goToEdit(user.id)}
-                    />
-                    <SmallButton
-                      icon={MdDelete}
-                      backgroundColorCode="#C93934"
-                      onClick={() => deleteUser(user.id)}
-                    />
+
+      {loading ? (
+        <>
+          <Loading />
+        </>
+      ) : (
+        <Form ref={formRef} onSubmit={handleSubmitCheckboxes}>
+          <table>
+            <thead>
+              <tr>
+                <th> </th>
+                <th>ID</th>
+                <th>Usuário</th>
+                <th>Administrador</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.length !== 0 ? (
+                users.map((user) => (
+                  <tr key={user.id}>
+                    <td>
+                      <Checkbox name={`user${user.id}`} value={user.id} />
+                    </td>
+                    <td>{user.id}</td>
+                    <td>{user.username}</td>
+                    <td>
+                      {(user.role === 'adm' && <FcCheckmark size={20} />) ||
+                        (user.role === 'user' && (
+                          <MdClose color="red" size={20} />
+                        ))}
+                    </td>
+                    <td>
+                      <SmallButton
+                        icon={MdEdit}
+                        type="button"
+                        backgroundColorCode="#0269D9"
+                        onClick={() => goToEdit(user.id)}
+                      />
+                      <SmallButton
+                        icon={MdDelete}
+                        backgroundColorCode="#C93934"
+                        onClick={() => deleteUser(user.id)}
+                      />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={6} align="center">
+                    Nenhum usuário encontrado.
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={6} align="center">
-                  Nenhum usuário encontrado.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-        <SmallButton
-          backgroundColorCode="#46AC91"
-          icon={AiOutlineReload}
-          onClick={() => {
-            setLastQuery('');
-            loadUsers({});
-          }}
-        >
-          Limpar
-        </SmallButton>
-        <SmallButton
-          icon={MdDelete}
-          backgroundColorCode="#C93934"
-          type="submit"
-        >
-          Deletar selecionados
-        </SmallButton>
-      </Form>
+              )}
+            </tbody>
+          </table>
+          <SmallButton
+            backgroundColorCode="#46AC91"
+            icon={AiOutlineReload}
+            onClick={() => {
+              setLastQuery('');
+              loadUsers({});
+            }}
+          >
+            Limpar
+          </SmallButton>
+          <SmallButton
+            icon={MdDelete}
+            backgroundColorCode="#C93934"
+            type="submit"
+          >
+            Deletar selecionados
+          </SmallButton>
+        </Form>
+      )}
       {users.length !== 0 && paginateInfo.totalPages > 1 && (
         <Pagination
           current={paginateInfo.currentPage}
