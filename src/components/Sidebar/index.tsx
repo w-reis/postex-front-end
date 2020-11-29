@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { MdStorage, MdMailOutline, MdPeople } from 'react-icons/md';
+import { MdMailOutline, MdPeople } from 'react-icons/md';
 import { useAuth } from '../../hooks/auth';
 
 import BlueLogoImg from '../../assets/logo-title-blue.svg';
